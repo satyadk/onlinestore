@@ -32,14 +32,13 @@ public class ObjectToXMLProcessor {
     // TODO: Read from properties file
     private String configDir = "src/main/resources/";
     private String configfileName = "smooks-config-xml.xml";
-    private String xmlGenerationDir = "src/main/resources/fileMount/";
 
     /**
      * Run the transform for the request or response.
      * @param inputJavaObject The input Java Object.
      * @return The transformed Java Object XML.
      */
-    public void  runSmooksTransform(Object inputJavaObject, String guid) throws IOException, SAXException {
+    public String  runSmooksTransform(Object inputJavaObject) throws IOException, SAXException {
         Smooks smooks = new Smooks(configDir+configfileName);
 
         try {
@@ -50,19 +49,10 @@ public class ObjectToXMLProcessor {
             smooks.filterSource(executionContext, new JavaSource(inputJavaObject), new StreamResult(writer));
 
 
-            stringToDom(writer.toString(),guid);
+           return  writer.toString();
         } finally {
             smooks.close();
         }
     }
-
-    private void stringToDom(String xmlSource, String fileName)
-            throws IOException {
-        java.io.FileWriter fw = new java.io.FileWriter(xmlGenerationDir+fileName+".xml");
-        fw.write(xmlSource);
-        fw.close();
-    }
-
-
 
 }

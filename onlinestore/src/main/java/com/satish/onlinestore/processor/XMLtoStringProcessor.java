@@ -38,10 +38,8 @@ import java.io.File;
         // TODO: Read from properties file
         private String configDir = "src/main/resources/";
         private String configfileName = "smooks-config-xslt.xml";
-        private String xmlGenerationDir = "src/main/resources/fileMount/";
 
-
-        public String runSmooksTransform(String guid) throws IOException, SAXException, SmooksException {
+        public String runSmooksTransform(String xmlString) throws IOException, SAXException, SmooksException {
 
             // Instantiate Smooks with the config...
             Smooks smooks = new Smooks(configDir + configfileName);
@@ -51,7 +49,7 @@ import java.io.File;
                 ExecutionContext executionContext = smooks.createExecutionContext();
                 CharArrayWriter outputWriter = new CharArrayWriter();
 
-                byte[] messageIn = readInputMessage(guid);
+                byte[] messageIn = xmlString.getBytes();
 
                 // Filter the input message to the outputWriter, using the execution context...
                 smooks.filterSource(executionContext, new StreamSource(new ByteArrayInputStream(messageIn)), new StreamResult(outputWriter));
@@ -59,17 +57,6 @@ import java.io.File;
                 return outputWriter.toString();
             } finally {
                 smooks.close();
-                File file  = new File(xmlGenerationDir + guid + ".xml");
-                file.delete();
-            }
-        }
-
-        private byte[] readInputMessage(String fileName) {
-            try {
-                return StreamUtils.readStream(new FileInputStream(xmlGenerationDir + fileName + ".xml"));
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "<no-message/>".getBytes();
             }
         }
 

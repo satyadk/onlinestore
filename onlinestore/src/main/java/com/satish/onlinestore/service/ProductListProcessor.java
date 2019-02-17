@@ -67,10 +67,10 @@ public class ProductListProcessor {
             String guid = product.getGuid().toString();
 
             // Convert Object to XML
-            objectToXMLProcessor.runSmooksTransform(product,guid);
+            String xmlString = objectToXMLProcessor.runSmooksTransform(product);
 
             // Convert XML to String
-            String productString = xmLtoStringProcessor.runSmooksTransform(guid);
+            String productString = xmLtoStringProcessor.runSmooksTransform(xmlString);
             System.out.println(productString);
         }
 
